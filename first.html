@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <title>Example 01.01 - Basic skeleton</title>
+  <script type="text/javascript" src="./libs/three.js"></script>
+  <style>
+    body {
+      /* set margin to 0 and overflow to hidden, to
+       use the complete page */
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+<script type="text/javascript">
+    // once everything is loaded, we run our Three.js stuff.
+  function init() {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0x62fff));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    document.getElementById("WebGL-output")
+        .appendChild(renderer.domElement);
+    renderer.render(scene, camera);
+  }
+  window.onload = init
+
+</script>
+</body>
+</html>
