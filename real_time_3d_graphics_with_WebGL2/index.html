@@ -48,7 +48,7 @@
     }
 
     function init() {
-      const canvas = document.getElementById('webgl-canvas');
+      const canvas = utils.getCanvas('webgl-canvas');
 
       gl = utils.getGLContext(canvas);
       window.onkeydown = checkKey;

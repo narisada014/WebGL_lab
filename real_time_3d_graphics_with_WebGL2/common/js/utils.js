@@ -7,8 +7,7 @@ const utils = {
     const canvas = document.getElementById(id);
 
     if (!canvas) {
-      console.error(`There is no canvas with id ${id} on this 
-       page.`);
+      console.error(`There is no canvas with id ${id} on this page.`);
       return null;
     }
 
