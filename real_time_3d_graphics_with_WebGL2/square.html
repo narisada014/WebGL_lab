@@ -134,13 +134,17 @@
       // Setting up the VBO
       const squareVertexBuffer = gl.createBuffer();
 
+      // バッファを作成し、バッファ、オブジェクトを生成する
       gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
       // Provide instructions for VAO to use data later in draw
       // VAOに外部のaVertexPositionからデータを抽出するための命令をする
+      // シェーダーのattributeにバッファオブジェクトが渡ることを許可する
       gl.enableVertexAttribArray(program.aVertexPosition);
+      // シェーダーのattribute変数にバッファオブジェクトの要素数や、型を割り当てる
       gl.vertexAttribPointer(program.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+      // 上記のm状態で、バッファオブジェクトと、シェーダーに渡すattribute変数とが接続された状態になり、WebGLがこれらを使用可能になる。
 
       // Setting up the IBO
       squareIndexBuffer = gl.createBuffer();
