@@ -39,7 +39,7 @@
     // across the application
     let gl,
       program,
-      squareVertexBuffer,
+      squareVAO,
       squareIndexBuffer,
       indices;
     // Given an id, extract the content's of a shader script
@@ -102,43 +102,69 @@
         V1                    V2
         (-0.5, -0.5, 0)       (0.5, -0.5, 0)
       */
+      /* 5角形の例
       const vertices = [
-        -0.5, 0.5, 0,
-        -0.5, -0.5, 0,
-        0.5, -0.5, 0,
-        0.5, 0.5, 0
+        -0.5, 0.5, 0, // インデックス 0
+        -0.5, -0.5, 0, // インデックス 1
+        0.5, -0.5, 0, // インデックス 2
+        0.5, 0.5, 0, // インデックス 3
+        0, 1.0, 0 // インデックス 4
       ];
+      // 上記のインデックスに合わせて三角形のインデックスの関係を変更
+      // Indices defined in counter-clockwise order
+      indices = [0, 1, 4, 1, 2, 4, 2, 3, 4];
+      */
+
+      const vertices = [
+        -0.5, 0.5, 0, // インデックス 0
+        -0.5, -0.5, 0, // インデックス 1
+        0.5, -0.5, 0, // インデックス 2
+        0.5, 0.5, 0, // インデックス 3
+      ];
+      // 上記のインデックスに合わせて三角形のインデックスの関係を変更
       // Indices defined in counter-clockwise order
       indices = [0, 1, 2, 0, 2, 3];
+
+      // Creat VAOインスタンス
+      squareVAO = gl.createVertexArray();
+
+      // Bind it so we can work omn it
+      gl.bindVertexArray(squareVAO);
+
       // Setting up the VBO
-      squareVertexBuffer = gl.createBuffer();
+      const squareVertexBuffer = gl.createBuffer();
+
       gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+      // Provide instructions for VAO to use data later in draw
+      // VAOに外部のaVertexPositionからデータを抽出するための命令をする
+      gl.enableVertexAttribArray(program.aVertexPosition);
+      gl.vertexAttribPointer(program.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+
       // Setting up the IBO
       squareIndexBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
       // Clean
       // ここでcleanを行わなければglインスタンスにbufferがbindされたままとなり後続の処理を行えない
+      gl.bindVertexArray(null);
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
     // We call draw to render to our canvas
+    // VAO使うとdrawがVAOのdrawだけになるので楽
     function draw() {
       // Clear the scene
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      // Use the buffers we've constructed
-      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexBuffer);
-      gl.vertexAttribPointer(program.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(program.aVertexPosition);
-      // Bind IBO
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
-      // Draw to the scene using triangle primitives
+
+      // Bind the VAO
+      gl.bindVertexArray(squareVAO);
+
       gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
       // Clean
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+      gl.bindVertexArray(null);
     }
     // Entry point to our application
     function init() {
